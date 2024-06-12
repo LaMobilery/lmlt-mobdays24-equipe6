@@ -19,8 +19,36 @@ async function createGarden(location, title, created) {
     return garden
 }
 
+async function createVegetable(args) {
+    console.log(args);
+    try {
+    const garden = await Garden.findByIdAndUpdate(
+        args.gardenId,
+        { $push: { vegetable: { 
+            maturity: args.maturity,
+            plantationDate: args.plantationDate,
+            name: args.name,
+            recipe: args.recipe,
+            description: args.description,
+            harvestDate: args.harvestDate,
+            garden: args.gardenId
+         } } },
+        { new: true, useFindAndModify: false }
+      )
+      if (garden) {
+        return garden;
+      } else {
+        return {message: "jardin non trouvé"}
+      }
+    } catch (err) {
+      throw error('Erreur lors de la mise à jour du jardin:', err);
+    }
+
+}
+
 
 const aiBase = async (req,res) => {
+    const history = [];
     try {
         const completion = await openai.chat.completions.create({
             model: "gpt-4o",
@@ -47,6 +75,43 @@ const aiBase = async (req,res) => {
                         }
                     },
                     required: ['title', 'location', 'created']
+                },
+                {
+                    name: "createVegetable",
+                    description: "create a new vegetable with rich data, maturity, name, one recipe and a brief description of the vegatable",
+                    parameters: {
+                        type: "object",
+                        properties: {
+                            name: {
+                                type: "string",
+                                description: "name of the vegetable"
+                            },
+                            maturity: {
+                                type: "string",
+                                description: "actual maturity of the vegetable (ex: if the vegetable is just a seed)"
+                            },
+                            recipe: {
+                                type: "string",
+                                description: "you have to generate a recipe based on the vegetable name"
+                            },
+                            description: {
+                                type: "string",
+                                description: "you have to generate a description based on the vegetable name"
+                            },
+                            plantationDate: {
+                                type: "string",
+                                description: "Plantation date formated in javascript readable date format"
+                            },
+                            harvestDate:{
+                                type: "string",
+                                description: "you have to (Based on maturity and plantation) date give me the estimated harvest date"
+                            },
+                            gardenId: {
+                                type: "string",
+                                description: "ID of the garden"
+                            }
+                        }
+                    }
                 }
             ],
             function_call: "auto"
@@ -60,8 +125,20 @@ const aiBase = async (req,res) => {
                 
                 const garden = await createGarden(completionArguments.location, completionArguments.title, completionArguments.created)
 
-                console.log(garden)
+                if(garden.id){
+                    res.send(200, {message: "Garden created", data: garden})
+                } else {
+                    res.send(500)
+                }
             }
+
+            if(functionCallName === "createVegetable") {
+                const completionArguments = JSON.parse(completionResponse.function_call.arguments)
+                const vegetable = await createVegetable(completionArguments);
+                res.send(vegetable);
+            }
+        } else {
+            res.send(completionResponse.content)
         }
     }   catch (error) {
         if (error.response) {

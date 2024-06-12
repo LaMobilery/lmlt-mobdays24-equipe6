@@ -1,5 +1,5 @@
-const express = require('express');
-const gardenRoute = require('./garden.router');
+const express = require('express')
+const gardenRoute = require('./garden.router')
 const aiRoute = require('./ai.router')
 
 const router = express.Router();
