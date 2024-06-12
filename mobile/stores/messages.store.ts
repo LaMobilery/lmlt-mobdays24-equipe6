@@ -1,11 +1,11 @@
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import { create } from "zustand"
-import { createJSONStorage, persist } from "zustand/middleware"
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { create } from 'zustand'
+import { createJSONStorage, persist } from 'zustand/middleware'
 
 export type Message = {
   text: string
   date: string
-  from: "user" | "server"
+  from: 'user' | 'server'
 }
 
 export type MessagesStore = {
@@ -25,7 +25,7 @@ export const useMessagesStore = create<MessagesStore>()(
       resetMessages: () => set({ messages: [] }),
     }),
     {
-      name: "messages-store",
+      name: 'messages-store',
       storage: createJSONStorage(() => AsyncStorage),
       version: 1,
       migrate: (state) => {
