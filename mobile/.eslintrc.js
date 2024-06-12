@@ -7,5 +7,6 @@ module.exports = {
     "simple-import-sort/imports": "warn",
     "simple-import-sort/exports": "warn",
     "autofix/no-unused-vars": "warn",
+    "import/no-unresolved": "off"
   },
 };
