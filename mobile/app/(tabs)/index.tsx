@@ -4,15 +4,29 @@ import {
   ButtonText,
   Input,
   InputField,
+  InputSlot,
   Text,
 } from '@gluestack-ui/themed'
 import Voice, { SpeechResultsEvent } from '@react-native-voice/voice'
 import { useEffect, useState } from 'react'
-import { Image, StyleSheet } from 'react-native'
+import { FlatList, Image, StyleSheet } from 'react-native'
+
+import { UIMessage } from '@/components/UIMessage'
+import {
+  useAddMessage,
+  useMessages,
+  useResetMessages,
+} from '@/stores/messages.store'
 
 export default function DiscussionScreen() {
   const [started, setStarted] = useState(false)
   const [result, setResult] = useState('')
+
+  const [message, setMessage] = useState('')
+
+  const messages = useMessages()
+  const addMessage = useAddMessage()
+  const resetMessages = useResetMessages()
 
   useEffect(() => {
     Voice.onSpeechStart = onSpeechStart
@@ -62,6 +76,27 @@ export default function DiscussionScreen() {
 
   return (
     <Box style={styles.container}>
+      <FlatList
+        style={{ alignSelf: 'stretch' }}
+        contentContainerStyle={{ flexGrow: 1, gap: 8 }}
+        data={messages}
+        keyExtractor={(item) => item.date}
+        renderItem={({ item }) => {
+          return (
+            <Box
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent:
+                  item.from === 'user' ? 'flex-end' : 'flex-start',
+              }}
+            >
+              <UIMessage message={item} />
+            </Box>
+          )
+        }}
+      />
+
       <Box style={styles.chatContainer}>
         <Text>{result}</Text>
       </Box>
@@ -74,8 +109,33 @@ export default function DiscussionScreen() {
           isInvalid={false}
           isReadOnly={false}
         >
-          <InputField placeholder="Enter Text here" />
+          <InputField
+            placeholder="Enter Text here"
+            value={message}
+            onChangeText={(text) => setMessage(text)}
+          />
+
+          <InputSlot>
+            <Button
+              onPress={() => {
+                if (message === 'DEBUG_RESET_STORE') {
+                  resetMessages()
+                } else {
+                  addMessage({
+                    text: message,
+                    date: new Date().toISOString(),
+                    from: 'user',
+                  })
+                }
+
+                setMessage('')
+              }}
+            >
+              <ButtonText>Envoyer</ButtonText>
+            </Button>
+          </InputSlot>
         </Input>
+
         <Button
           onLongPress={startRecognizing}
           onPressOut={stopRecognizing}
