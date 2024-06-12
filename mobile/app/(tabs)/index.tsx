@@ -4,12 +4,12 @@ import {
   ButtonText,
   Input,
   InputField,
-  Text,
 } from '@gluestack-ui/themed'
 import Voice, { SpeechResultsEvent } from '@react-native-voice/voice'
 import { useCallback, useEffect, useState } from 'react'
-import { FlatList, Image, StyleSheet } from 'react-native'
+import { Image, StyleSheet } from 'react-native'
 
+import { MessagesList } from '@/components/MessagesList'
 import { UIMessage } from '@/components/UIMessage'
 import {
   useAddMessage,
@@ -95,32 +95,47 @@ export default function DiscussionScreen() {
     [startRecognizing, stopRecognizing],
   )
 
+  const sendTextMessage = useCallback(() => {
+    if (textMessage === 'DEBUG_RESET_STORE') {
+      resetMessages()
+    } else {
+      addMessage({
+        text: textMessage,
+        date: new Date().toISOString(),
+        from: 'user',
+      })
+    }
+
+    setTextMessage('')
+  }, [setTextMessage, resetMessages, addMessage, textMessage])
+
   return (
     <Box style={styles.container}>
-      <FlatList
-        style={{ alignSelf: 'stretch' }}
-        contentContainerStyle={{ flexGrow: 1, gap: 8 }}
-        data={messages}
-        keyExtractor={(item) => item.date}
-        renderItem={({ item }) => {
-          return (
+      <MessagesList
+        messages={messages}
+        footer={
+          // TEMPORARY MESSAGE WHILE TALKING
+          voiceMessage ? (
             <Box
               style={{
                 flex: 1,
                 flexDirection: 'row',
-                justifyContent:
-                  item.from === 'user' ? 'flex-end' : 'flex-start',
+                justifyContent: 'flex-end',
+                alignSelf: 'stretch',
               }}
             >
-              <UIMessage message={item} />
+              <UIMessage
+                message={{
+                  text: voiceMessage,
+                  date: new Date().toISOString(),
+                  from: 'user',
+                }}
+              />
             </Box>
-          )
-        }}
+          ) : null
+        }
       />
 
-      <Box style={styles.chatContainer}>
-        <Text>{voiceMessage}</Text>
-      </Box>
       <Box style={styles.inputContainer}>
         <Input
           style={styles.input}
@@ -131,28 +146,14 @@ export default function DiscussionScreen() {
           isReadOnly={false}
         >
           <InputField
-            placeholder="Enter Text here"
+            placeholder="Qu'avez-vous arrosé ?"
             value={textMessage}
             onChangeText={(text) => setTextMessage(text)}
           />
         </Input>
 
         {textMessage.length > 0 ? (
-          <Button
-            onPress={() => {
-              if (textMessage === 'DEBUG_RESET_STORE') {
-                resetMessages()
-              } else {
-                addMessage({
-                  text: textMessage,
-                  date: new Date().toISOString(),
-                  from: 'user',
-                })
-              }
-
-              setTextMessage('')
-            }}
-          >
+          <Button onPress={sendTextMessage}>
             <ButtonText>Envoyer</ButtonText>
           </Button>
         ) : (
@@ -176,13 +177,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 15,
-  },
-  chatContainer: {
-    flex: 1,
-    alignItems: 'center',
-    width: '100%',
-    justifyContent: 'center',
-    borderWidth: 1,
   },
   title: {
     fontSize: 20,
