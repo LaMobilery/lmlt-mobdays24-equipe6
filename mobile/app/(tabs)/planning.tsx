@@ -2,10 +2,10 @@ import { StyleSheet } from "react-native";
 
 import { Text, View } from "@/components/Themed";
 
-export default function DiscussionScreen() {
+export default function PlanningScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Discussion</Text>
+      <Text style={styles.title}>Planning</Text>
     </View>
   );
 }
@@ -19,10 +19,5 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
   },
 });
