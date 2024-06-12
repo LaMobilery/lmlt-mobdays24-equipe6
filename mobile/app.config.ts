@@ -31,7 +31,18 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       output: "static",
       favicon: "./assets/images/favicon.png",
     },
-    plugins: ["expo-router"],
+    plugins: [
+      "expo-router",
+      [
+        "@react-native-voice/voice",
+        {
+          microphonePermission:
+            "CUSTOM: Allow $(PRODUCT_NAME) to access the microphone",
+          speechRecognitionPermission:
+            "CUSTOM: Allow $(PRODUCT_NAME) to securely recognize user speech",
+        },
+      ],
+    ],
     experiments: {
       typedRoutes: true,
     },
