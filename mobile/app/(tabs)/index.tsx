@@ -10,15 +10,11 @@ import { useCallback, useEffect, useState } from 'react'
 import { Image, StyleSheet } from 'react-native'
 
 import { MessagesList } from '@/components/MessagesList'
-import { UIMessage } from '@/components/UIMessage'
 import {
   useAddMessage,
   useMessages,
   useResetMessages,
 } from '@/stores/messages.store'
-import { throttle } from '@/utils/throttle'
-
-const VOICE_THROTTLE_MS = 1000
 
 export default function DiscussionScreen() {
   const messages = useMessages()
@@ -38,6 +34,7 @@ export default function DiscussionScreen() {
 
   const onSpeechEnd = useCallback(() => {
     setIsRecording(false)
+    setVoiceMessage('')
   }, [setIsRecording])
 
   const onSpeechResults = useCallback(
@@ -62,11 +59,10 @@ export default function DiscussionScreen() {
   const startRecognizing = useCallback(async () => {
     try {
       await Voice.start('fr-FR')
-      setVoiceMessage('')
     } catch (e) {
       console.error(e)
     }
-  }, [setVoiceMessage])
+  }, [])
 
   const stopRecognizing = useCallback(async () => {
     try {
@@ -76,27 +72,13 @@ export default function DiscussionScreen() {
         date: new Date().toISOString(),
         from: 'user',
       })
-      setVoiceMessage('')
     } catch (e) {
       console.error(e)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [addMessage, setVoiceMessage])
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const updateRecognizing = useCallback(
-    throttle(async (isRecognizing: boolean) => {
-      if (isRecognizing) {
-        startRecognizing()
-      } else {
-        stopRecognizing()
-      }
-    }, VOICE_THROTTLE_MS),
-    [startRecognizing, stopRecognizing],
-  )
+  }, [addMessage, voiceMessage])
 
   const sendTextMessage = useCallback(() => {
-    if (textMessage === 'DEBUG_RESET_STORE') {
+    if (textMessage === 'Reset') {
       resetMessages()
     } else {
       addMessage({
@@ -109,30 +91,22 @@ export default function DiscussionScreen() {
     setTextMessage('')
   }, [setTextMessage, resetMessages, addMessage, textMessage])
 
+  const isOnStore = messages[messages.length - 1]?.text === voiceMessage
+
   return (
     <Box style={styles.container}>
       <MessagesList
-        messages={messages}
-        footer={
-          // TEMPORARY MESSAGE WHILE TALKING
-          voiceMessage ? (
-            <Box
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'flex-end',
-                alignSelf: 'stretch',
-              }}
-            >
-              <UIMessage
-                message={{
+        messages={
+          voiceMessage && !isOnStore
+            ? [
+                ...messages,
+                {
                   text: voiceMessage,
                   date: new Date().toISOString(),
                   from: 'user',
-                }}
-              />
-            </Box>
-          ) : null
+                },
+              ]
+            : messages
         }
       />
 
@@ -158,8 +132,8 @@ export default function DiscussionScreen() {
           </Button>
         ) : (
           <Button
-            onPressIn={() => updateRecognizing(true)}
-            onPressOut={() => updateRecognizing(false)}
+            onPressIn={startRecognizing}
+            onPressOut={stopRecognizing}
             style={styles.speechBtn}
           >
             <Image source={require('@/assets/logos/speech.png')} />
@@ -183,7 +157,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   inputContainer: {
-    // borderWidth: 1,
     flexDirection: 'row',
     gap: 10,
   },
