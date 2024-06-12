@@ -7,15 +7,17 @@ import { UIMessage } from './UIMessage'
 
 export type MessagesListProps = {
   messages: Message[]
-  footer?: React.ReactElement | null
 }
 
-export const MessagesList = ({ messages, footer }: MessagesListProps) => {
+export const MessagesList = ({ messages }: MessagesListProps) => {
+  const reversedMessages = [...messages].reverse()
+
   return (
     <FlatList
       style={{ alignSelf: 'stretch' }}
       contentContainerStyle={styles.contentContainer}
-      data={messages}
+      data={reversedMessages}
+      inverted
       keyExtractor={(item) => item.date}
       renderItem={({ item }) => {
         return (
@@ -31,7 +33,6 @@ export const MessagesList = ({ messages, footer }: MessagesListProps) => {
           </Box>
         )
       }}
-      ListFooterComponent={footer}
     />
   )
 }
@@ -40,6 +41,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     flexGrow: 1,
     gap: 8,
+    paddingVertical: 16,
   },
   messageContainer: {
     flex: 1,
