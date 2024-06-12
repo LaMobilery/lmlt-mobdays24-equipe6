@@ -6,6 +6,7 @@ import { Image, ImageSourcePropType, Pressable } from 'react-native'
 import { useClientOnlyValue } from '@/components/useClientOnlyValue'
 import { useColorScheme } from '@/components/useColorScheme'
 import Colors from '@/constants/Colors'
+import { getCurrentDate } from '@/utils/date'
 
 const TabBarIcon = ({
   source,
@@ -83,6 +84,24 @@ export default function TabLayout() {
         name="setup"
         options={{
           title: 'Setup',
+          headerTitle: getCurrentDate(),
+          headerTitleStyle: {
+            textTransform: 'uppercase',
+          },
+          headerRight: () => (
+            <Link href="/info" asChild>
+              <Pressable>
+                {({ pressed }) => (
+                  <FontAwesome
+                    name="info-circle"
+                    size={25}
+                    color={Colors[colorScheme ?? 'light'].text}
+                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
+                  />
+                )}
+              </Pressable>
+            </Link>
+          ),
           tabBarIcon: ({ color }) => (
             <TabBarIcon
               source={require('@/assets/logos/icon-setup.png')}
