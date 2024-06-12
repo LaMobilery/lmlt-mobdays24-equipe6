@@ -4,11 +4,10 @@ import {
   ButtonText,
   Input,
   InputField,
-  InputSlot,
   Text,
 } from '@gluestack-ui/themed'
 import Voice, { SpeechResultsEvent } from '@react-native-voice/voice'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { FlatList, Image, StyleSheet } from 'react-native'
 
 import { UIMessage } from '@/components/UIMessage'
@@ -17,16 +16,38 @@ import {
   useMessages,
   useResetMessages,
 } from '@/stores/messages.store'
+import { throttle } from '@/utils/throttle'
+
+const VOICE_THROTTLE_MS = 1000
 
 export default function DiscussionScreen() {
-  const [started, setStarted] = useState(false)
-  const [result, setResult] = useState('')
-
-  const [message, setMessage] = useState('')
-
   const messages = useMessages()
   const addMessage = useAddMessage()
   const resetMessages = useResetMessages()
+
+  const [isRecording, setIsRecording] = useState(false)
+  if (0) {
+    console.log('isRecording', isRecording) // DEBUG
+  }
+  const [voiceMessage, setVoiceMessage] = useState('')
+  const [textMessage, setTextMessage] = useState('')
+
+  const onSpeechStart = useCallback(() => {
+    setIsRecording(true)
+  }, [setIsRecording])
+
+  const onSpeechEnd = useCallback(() => {
+    setIsRecording(false)
+  }, [setIsRecording])
+
+  const onSpeechResults = useCallback(
+    (e: SpeechResultsEvent) => {
+      if (!e.value?.[0]) return
+
+      setVoiceMessage(e.value[0])
+    },
+    [setVoiceMessage],
+  )
 
   useEffect(() => {
     Voice.onSpeechStart = onSpeechStart
@@ -36,43 +57,43 @@ export default function DiscussionScreen() {
     return () => {
       Voice.destroy().then(Voice.removeAllListeners)
     }
-  }, [])
+  }, [onSpeechEnd, onSpeechResults, onSpeechStart])
 
-  useEffect(() => {
-    console.log({ result })
-    console.log(started)
-  }, [result, started])
-
-  const onSpeechStart = () => {
-    setStarted(true)
-  }
-
-  const onSpeechEnd = () => {
-    setStarted(false)
-  }
-
-  const onSpeechResults = (e: SpeechResultsEvent) => {
-    if (!e.value?.[0]) return
-
-    setResult(e.value[0])
-  }
-
-  const startRecognizing = async () => {
+  const startRecognizing = useCallback(async () => {
     try {
       await Voice.start('fr-FR')
-      setResult('')
+      setVoiceMessage('')
     } catch (e) {
       console.error(e)
     }
-  }
+  }, [setVoiceMessage])
 
-  const stopRecognizing = async () => {
+  const stopRecognizing = useCallback(async () => {
     try {
       await Voice.stop()
+      addMessage({
+        text: voiceMessage,
+        date: new Date().toISOString(),
+        from: 'user',
+      })
+      setVoiceMessage('')
     } catch (e) {
       console.error(e)
     }
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [addMessage, setVoiceMessage])
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const updateRecognizing = useCallback(
+    throttle(async (isRecognizing: boolean) => {
+      if (isRecognizing) {
+        startRecognizing()
+      } else {
+        stopRecognizing()
+      }
+    }, VOICE_THROTTLE_MS),
+    [startRecognizing, stopRecognizing],
+  )
 
   return (
     <Box style={styles.container}>
@@ -98,7 +119,7 @@ export default function DiscussionScreen() {
       />
 
       <Box style={styles.chatContainer}>
-        <Text>{result}</Text>
+        <Text>{voiceMessage}</Text>
       </Box>
       <Box style={styles.inputContainer}>
         <Input
@@ -111,39 +132,39 @@ export default function DiscussionScreen() {
         >
           <InputField
             placeholder="Enter Text here"
-            value={message}
-            onChangeText={(text) => setMessage(text)}
+            value={textMessage}
+            onChangeText={(text) => setTextMessage(text)}
           />
-
-          <InputSlot>
-            <Button
-              onPress={() => {
-                if (message === 'DEBUG_RESET_STORE') {
-                  resetMessages()
-                } else {
-                  addMessage({
-                    text: message,
-                    date: new Date().toISOString(),
-                    from: 'user',
-                  })
-                }
-
-                setMessage('')
-              }}
-            >
-              <ButtonText>Envoyer</ButtonText>
-            </Button>
-          </InputSlot>
         </Input>
 
-        <Button
-          onLongPress={startRecognizing}
-          onPressOut={stopRecognizing}
-          style={styles.speechBtn}
-        >
-          <Image source={require('@/assets/logos/speech.png')} />
-          <ButtonText>Parler</ButtonText>
-        </Button>
+        {textMessage.length > 0 ? (
+          <Button
+            onPress={() => {
+              if (textMessage === 'DEBUG_RESET_STORE') {
+                resetMessages()
+              } else {
+                addMessage({
+                  text: textMessage,
+                  date: new Date().toISOString(),
+                  from: 'user',
+                })
+              }
+
+              setTextMessage('')
+            }}
+          >
+            <ButtonText>Envoyer</ButtonText>
+          </Button>
+        ) : (
+          <Button
+            onPressIn={() => updateRecognizing(true)}
+            onPressOut={() => updateRecognizing(false)}
+            style={styles.speechBtn}
+          >
+            <Image source={require('@/assets/logos/speech.png')} />
+            <ButtonText>Parler</ButtonText>
+          </Button>
+        )}
       </Box>
     </Box>
   )
