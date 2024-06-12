@@ -1,4 +1,3 @@
-const mongoose = require('mongoose')
 const Garden = require('../models/garden.model')
 
 const getGardenById = async (req, res) => {
