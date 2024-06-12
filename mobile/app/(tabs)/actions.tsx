@@ -1,12 +1,11 @@
+import { Box, Text } from "@gluestack-ui/themed";
 import { StyleSheet } from "react-native";
-
-import { Text, View } from "@/components/Themed";
 
 export default function ActionsScreen() {
   return (
-    <View style={styles.container}>
+    <Box style={styles.container}>
       <Text style={styles.title}>Actions</Text>
-    </View>
+    </Box>
   );
 }
 

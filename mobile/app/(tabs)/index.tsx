@@ -1,12 +1,19 @@
+import { Box, Input, InputField } from "@gluestack-ui/themed";
 import { StyleSheet } from "react-native";
-
-import { Text, View } from "@/components/Themed";
 
 export default function DiscussionScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Discussion</Text>
-    </View>
+    <Box style={styles.container}>
+      <Input
+        variant="outline"
+        size="md"
+        isDisabled={false}
+        isInvalid={false}
+        isReadOnly={false}
+      >
+        <InputField placeholder="Enter Text here" />
+      </Input>
+    </Box>
   );
 }
 
@@ -19,10 +26,5 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
   },
 });
