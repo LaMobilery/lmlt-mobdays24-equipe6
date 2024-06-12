@@ -20,6 +20,7 @@
     "@gluestack-style/react": "^1.0.56",
     "@gluestack-ui/config": "^1.1.18",
     "@gluestack-ui/themed": "^1.1.29",
+    "@react-native-voice/voice": "^3.2.4",
     "@react-navigation/native": "^6.0.2",
     "expo": "~51.0.11",
     "expo-dev-client": "~4.0.15",
