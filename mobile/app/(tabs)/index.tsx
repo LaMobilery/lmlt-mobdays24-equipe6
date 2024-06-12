@@ -59,7 +59,6 @@ export default function DiscussionScreen() {
   const startRecognizing = useCallback(async () => {
     try {
       await Voice.start('fr-FR')
-      // setVoiceMessage('')
     } catch (e) {
       console.error(e)
     }
@@ -77,18 +76,6 @@ export default function DiscussionScreen() {
       console.error(e)
     }
   }, [addMessage, voiceMessage])
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  // const updateRecognizing = useCallback(
-  //   throttle(async (isRecognizing: boolean) => {
-  //     if (isRecognizing) {
-  //       startRecognizing()
-  //     } else {
-  //       stopRecognizing()
-  //     }
-  //   }, VOICE_THROTTLE_MS),
-  //   [startRecognizing, stopRecognizing],
-  // )
 
   const sendTextMessage = useCallback(() => {
     if (textMessage === 'Reset') {
@@ -170,7 +157,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   inputContainer: {
-    // borderWidth: 1,
     flexDirection: 'row',
     gap: 10,
   },
