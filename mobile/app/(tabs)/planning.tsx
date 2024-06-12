@@ -1,10 +1,37 @@
-import { Box, Text } from '@gluestack-ui/themed'
+import { Box } from '@gluestack-ui/themed'
 import { StyleSheet } from 'react-native'
+
+import { Table, TableHeader } from '@/components/Table'
+
+type Person = {
+  name: string
+  age: number
+}
+
+const header: TableHeader<Person> = [
+  { label: 'Name', key: 'name' },
+  { label: 'Age', key: 'age' },
+]
+
+const rows: Person[] = [
+  {
+    name: 'John Doe',
+    age: 30,
+  },
+  {
+    name: 'Jane Doe',
+    age: 23,
+  },
+  {
+    name: 'John Smith',
+    age: 40,
+  },
+]
 
 export default function PlanningScreen() {
   return (
     <Box style={styles.container}>
-      <Text style={styles.title}>Planning</Text>
+      <Table header={header} rows={rows} />
     </Box>
   )
 }
@@ -12,11 +39,6 @@ export default function PlanningScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    padding: 24,
   },
 })

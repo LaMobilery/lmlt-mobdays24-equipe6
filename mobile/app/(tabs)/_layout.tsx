@@ -1,19 +1,21 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { Link, Tabs } from 'expo-router'
 import React from 'react'
-import { Pressable } from 'react-native'
+import { Image, ImageSourcePropType, Pressable } from 'react-native'
 
 import { useClientOnlyValue } from '@/components/useClientOnlyValue'
 import { useColorScheme } from '@/components/useColorScheme'
 import Colors from '@/constants/Colors'
 import { getCurrentDate } from '@/utils/date'
 
-// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name']
-  color: string
-}) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />
+const TabBarIcon = ({
+  source,
+  color,
+}: {
+  source: ImageSourcePropType
+  color?: string
+}) => {
+  return <Image source={source} style={{ tintColor: color }} />
 }
 
 export default function TabLayout() {
@@ -32,7 +34,12 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Discussion',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon
+              source={require('@/assets/logos/icon-discussion.png')}
+              color={color}
+            />
+          ),
           headerRight: () => (
             <Link href="/info" asChild>
               <Pressable>
@@ -53,21 +60,30 @@ export default function TabLayout() {
         name="planning"
         options={{
           title: 'Planning',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon
+              source={require('@/assets/logos/icon-planning.png')}
+              color={color}
+            />
+          ),
         }}
       />
       <Tabs.Screen
         name="actions"
         options={{
           title: 'Actions',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon
+              source={require('@/assets/logos/icon-actions.png')}
+              color={color}
+            />
+          ),
         }}
       />
       <Tabs.Screen
         name="setup"
         options={{
           title: 'Setup',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
           headerTitle: getCurrentDate(),
           headerTitleStyle: {
             textTransform: 'uppercase',
@@ -85,6 +101,12 @@ export default function TabLayout() {
                 )}
               </Pressable>
             </Link>
+          ),
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon
+              source={require('@/assets/logos/icon-setup.png')}
+              color={color}
+            />
           ),
         }}
       />

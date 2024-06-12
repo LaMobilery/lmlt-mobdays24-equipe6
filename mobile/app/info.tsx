@@ -1,6 +1,6 @@
-import { Box, Text } from "@gluestack-ui/themed";
-import { StatusBar } from "expo-status-bar";
-import { Platform, StyleSheet } from "react-native";
+import { Box, Text } from '@gluestack-ui/themed'
+import { StatusBar } from 'expo-status-bar'
+import { Platform, StyleSheet } from 'react-native'
 
 export default function InfoScreen() {
   return (
@@ -8,19 +8,19 @@ export default function InfoScreen() {
       <Text style={styles.title}>Info</Text>
 
       {/* Use a light status bar on iOS to account for the black space above the modal */}
-      <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
+      <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
     </Box>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   title: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
-});
+})
