@@ -7,6 +7,8 @@ import { useClientOnlyValue } from "@/components/useClientOnlyValue";
 import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
 
+import { getCurrentDate } from "../utils/date";
+
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>["name"];
@@ -25,8 +27,7 @@ export default function TabLayout() {
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
         headerShown: useClientOnlyValue(false, true),
-      }}
-    >
+      }}>
       <Tabs.Screen
         name="index"
         options={{
@@ -67,6 +68,24 @@ export default function TabLayout() {
         options={{
           title: "Setup",
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          headerTitle: getCurrentDate(),
+          headerTitleStyle: {
+            textTransform: "uppercase",
+          },
+          headerRight: () => (
+            <Link href="/info" asChild>
+              <Pressable>
+                {({ pressed }) => (
+                  <FontAwesome
+                    name="info-circle"
+                    size={25}
+                    color={Colors[colorScheme ?? "light"].text}
+                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
+                  />
+                )}
+              </Pressable>
+            </Link>
+          ),
         }}
       />
     </Tabs>
