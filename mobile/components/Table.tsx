@@ -68,7 +68,10 @@ const styles = StyleSheet.create({
   },
   cell: {
     flex: 1,
-    padding: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 4,
+    paddingVertical: 12,
     borderColor: '#3C3C4399',
   },
   borderBottom: {
