@@ -136,6 +136,10 @@ const aiBase = async (req,res) => {
                             type:{
                                 type: "string",
                                 description: "Type of the action resumed in one name in french and not a verb"
+                            },
+                            responseText: {
+                                type: "string",
+                                description: "Based on user demand, create a simple text response in this field to tell the user something like : Votre action (type de l'action) a été enregistrée."
                             }
                         }
                     },
@@ -152,6 +156,7 @@ const aiBase = async (req,res) => {
                 const completionArguments = JSON.parse(completionResponse.function_call.arguments)
                 
                 const garden = await createGarden(completionArguments.location, completionArguments.title, completionArguments.created)
+                await createAction("Création du potager " + completionArguments.title, new Date(), "");
 
                 if(garden.id){
                     res.send(200, {message: "Garden created", data: garden})
@@ -163,6 +168,7 @@ const aiBase = async (req,res) => {
             if(functionCallName === "createVegetable") {
                 const completionArguments = JSON.parse(completionResponse.function_call.arguments)
                 const response = await createVegetable(completionArguments);
+                await createAction("Ajout du légume " + completionArguments.name, new Date(), "");
                 if(response){
                     res.send(response);
                 }
@@ -171,8 +177,8 @@ const aiBase = async (req,res) => {
 
             if (functionCallName === "createAction") {
                 const completionArguments = JSON.parse(completionResponse.function_call.arguments)
-                const action = await createAction(completionArguments.type, new Date(), "");
-                res.send(action);
+                await createAction(completionArguments.type, new Date(), "");
+                res.send(completionArguments);
             }
         } else {
             res.send({'msg':completionResponse.content})
