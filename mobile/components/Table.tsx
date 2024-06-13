@@ -22,6 +22,7 @@ export function Table<T extends Record<string, any>>({
           const hasBorderRight = index < header.length - 1
           return (
             <Box
+              key={typeof item.key === 'string' ? item.key : index}
               style={[
                 styles.cell,
                 styles.borderBottomStrong,
@@ -29,17 +30,11 @@ export function Table<T extends Record<string, any>>({
               ]}
               key={index}
             >
-              <Text
-                key={typeof item.key === 'string' ? item.key : index}
-                style={styles.text}
-              >
-                {item.label}
-              </Text>
+              <Text style={styles.text}>{item.label}</Text>
             </Box>
           )
         })}
       </Box>
-
       <ScrollView showsVerticalScrollIndicator={false}>
         {rows.map((row, rowIndex) => {
           const hasBorderBottom = rowIndex < rows.length - 1
@@ -89,7 +84,10 @@ const styles = StyleSheet.create({
   },
   cell: {
     flex: 1,
-    padding: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 4,
+    paddingVertical: 12,
     borderColor: '#3C3C4399',
   },
   borderBottom: {
