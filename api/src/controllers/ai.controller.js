@@ -20,7 +20,6 @@ async function createGarden(location, title, created) {
 }
 
 async function createVegetable(args) {
-    console.log(args);
     try {
     const garden = await Garden.findByIdAndUpdate(
         args.gardenId,
@@ -41,7 +40,7 @@ async function createVegetable(args) {
         return {message: "jardin non trouvé"}
       }
     } catch (err) {
-      throw error('Erreur lors de la mise à jour du jardin:', err);
+      throw new Error('Erreur lors de la mise à jour du jardin:', err);
     }
 
 }
