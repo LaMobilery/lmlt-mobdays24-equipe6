@@ -3,30 +3,58 @@ import { StyleSheet } from 'react-native'
 
 import { Table, TableHeader } from '@/components/Table'
 
-type Person = {
-  name: string
-  age: number
+type Action = 'water' | 'cover'
+
+const actionEmojis: Record<Action, string> = {
+  water: '💧',
+  cover: '🌿',
 }
 
-const header: TableHeader<Person> = [
-  { label: 'Name', key: 'name' },
-  { label: 'Age', key: 'age' },
+type PlanningItem = {
+  date: string
+  actions: Action[]
+  koala: string | null
+}
+
+const header: TableHeader<PlanningItem> = [
+  { label: 'Jour', key: 'date' },
+  { label: 'Actions', key: 'actions' },
+  { label: 'Koala', key: 'koala' },
 ]
 
-const rows: Person[] = [
+const items: PlanningItem[] = [
   {
-    name: 'John Doe',
-    age: 30,
+    date: '2024-06-13T08:23:25.606Z',
+    actions: [],
+    koala: null,
   },
   {
-    name: 'Jane Doe',
-    age: 23,
+    date: '2024-06-14T08:23:25.606Z',
+    actions: ['water'],
+    koala: 'Jane Birkin',
   },
   {
-    name: 'John Smith',
-    age: 40,
+    date: '2024-06-15T08:23:25.606Z',
+    actions: ['cover'],
+    koala: 'Cécile Duplessis',
+  },
+  {
+    date: '2024-06-16T08:23:25.606Z',
+    actions: ['water', 'cover'],
+    koala: 'Zoé Lefevre',
   },
 ]
+
+const rows = items.map((item) => ({
+  date: new Date(item.date)
+    .toLocaleDateString('fr-FR', {
+      weekday: 'long',
+      day: 'numeric',
+    })
+    .toUpperCase(),
+  actions: item.actions.map((action) => actionEmojis[action]).join(', '),
+  koala: item.koala,
+}))
 
 export default function PlanningScreen() {
   return (
@@ -39,6 +67,6 @@ export default function PlanningScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
+    padding: 16,
   },
 })
