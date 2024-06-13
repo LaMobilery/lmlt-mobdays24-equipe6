@@ -1,12 +1,14 @@
 import { Button, ButtonText } from '@gluestack-ui/themed'
 import * as ImagePicker from 'expo-image-picker'
-import { useState } from 'react'
-import { Alert, Image, StyleSheet, Text, View } from 'react-native'
+import { useEffect, useState } from 'react'
+import { Alert, Image, StyleSheet, View } from 'react-native'
 
 import { axiosInstance } from '@/api/client'
+import { Vegetable } from '@/api/types'
+import { SetupTable } from '@/components/SetupTable'
 
 const prompt =
-  "Quel est ce légume ? Peux tu me donner cette information dans un json formaté comme suis. { name: valeur, maturity: valeur} La réponse ne doit être que le json, rien d'autre."
+  "Quel est ce légume ? Peux tu me donner cette information dans un json formaté comme suis. { name: valeur, maturity: valeur} la maturity doit être en jour La réponse ne doit être que le json, rien d'autre et sans balises de formatage."
 
 const sendImageToAI = async (base64: string) => {
   const payload = {
@@ -38,9 +40,28 @@ const sendImageToAI = async (base64: string) => {
   return res.data.choices[0].message.content
 }
 
+const getVegetables = async () => {
+  const res = await axiosInstance.get(
+    'http://localhost:3000/v1/garden/6669b5d92a7b8a4b1ecbab8a',
+  )
+  console.log(res.data['vegetable'])
+
+  return res
+}
+
 export default function SetupScreen() {
-  const [, setImage] = useState<string>('')
-  const [list, setList] = useState<{ name: string; maturity: string }[]>([])
+  const [list, setList] = useState<Vegetable[]>([])
+
+  const getVegetables = async () => {
+    const res = await axiosInstance.get(
+      'http://localhost:3000/v1/garden/6669b5d92a7b8a4b1ecbab8a',
+    )
+    setList(res.data['vegetable'])
+  }
+
+  useEffect(() => {
+    getVegetables()
+  }, [])
 
   const pickImageCameraRoll = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -48,20 +69,24 @@ export default function SetupScreen() {
       base64: true,
     })
     if (!result.canceled) {
-      setImage(result.assets[0].uri)
       const base64Image = `data:image/jpeg;base64,${result.assets[0].base64}`
       try {
         const res = await sendImageToAI(base64Image)
         const jsonObject = JSON.parse(res)
-        setList([
-          ...list,
-          { name: jsonObject['name'], maturity: jsonObject['maturity'] },
-        ])
+        await axiosInstance.post(
+          'http://localhost:3000/v1/garden/6669b5d92a7b8a4b1ecbab8a',
+          {
+            maturity: jsonObject['maturity'],
+            name: jsonObject['name'],
+          },
+        )
+        getVegetables()
       } catch (e) {
         console.log(e)
       }
     }
   }
+
   const pickImageCamera = async () => {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync()
     if (permissionResult.granted === false) {
@@ -70,7 +95,6 @@ export default function SetupScreen() {
     }
     const result = await ImagePicker.launchCameraAsync()
     if (!result.canceled) {
-      setImage(result.assets[0].uri)
       const base64Image = `data:image/jpeg;base64,${result.assets[0].base64}`
       try {
         await sendImageToAI(base64Image)
@@ -104,11 +128,15 @@ export default function SetupScreen() {
   }
 
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <View>
-        {list.length > 0 &&
-          list.map((item) => <Text key={item.name}>{item.name}</Text>)}
-      </View>
+    <View
+      style={{
+        flex: 1,
+        paddingBottom: 140,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <SetupTable array={list} />
       <View style={styles.footer}>
         <Button style={styles.btn} onPress={() => console.log('vocal')}>
           <Image source={require('@/assets/logos/speech.png')} />
@@ -135,5 +163,7 @@ const styles = StyleSheet.create({
   },
   btn: {
     gap: 10,
+    backgroundColor: '#FF8B33',
+    borderRadius: 50,
   },
 })
