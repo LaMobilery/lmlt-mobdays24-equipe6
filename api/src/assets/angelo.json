@@ -1,0 +1,387 @@
+[
+    {
+        "date": "2024-06-12",
+        "collaborator": "Julie R.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-06-12",
+        "collaborator": "Franck B.",
+        "isPotager": false
+    },
+    {
+        "date": "2024-06-12",
+        "collaborator": "Sebastien R.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-06-12",
+        "collaborator": "Julien V.",
+        "isPotager": false
+    },
+    {
+        "date": "2024-06-12",
+        "collaborator": "Quentin L.",
+        "isPotager": false
+    },
+    {
+        "date": "2024-06-13",
+        "collaborator": "Franck B.",
+        "isPotager": false
+    },
+    {
+        "date": "2024-06-17",
+        "collaborator": "Sebastien R.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-06-17",
+        "collaborator": "Nicolas Z.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-06-17",
+        "collaborator": "Franck B.",
+        "isPotager": false
+    },
+    {
+        "date": "2024-06-17",
+        "collaborator": "Julie R.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-06-17",
+        "collaborator": "Claire M.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-06-18",
+        "collaborator": "Claire M.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-06-18",
+        "collaborator": "Julie R.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-06-18",
+        "collaborator": "Julien V.",
+        "isPotager": false
+    },
+    {
+        "date": "2024-06-18",
+        "collaborator": "Nicolas Z.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-06-18",
+        "collaborator": "Sebastien R.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-06-19",
+        "collaborator": "Claire M.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-06-19",
+        "collaborator": "Julien V.",
+        "isPotager": false
+    },
+    {
+        "date": "2024-06-19",
+        "collaborator": "Nicolas Z.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-06-20",
+        "collaborator": "Julien V.",
+        "isPotager": false
+    },
+    {
+        "date": "2024-06-21",
+        "collaborator": "Quentin L.",
+        "isPotager": false
+    },
+    {
+        "date": "2024-06-21",
+        "collaborator": "Nicolas Z.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-06-21",
+        "collaborator": "Sebastien R.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-06-25",
+        "collaborator": "Claire M.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-06-25",
+        "collaborator": "Sebastien R.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-06-25",
+        "collaborator": "Nicolas Z.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-06-25",
+        "collaborator": "Franck B.",
+        "isPotager": false
+    },
+    {
+        "date": "2024-06-25",
+        "collaborator": "Quentin L.",
+        "isPotager": false
+    },
+    {
+        "date": "2024-06-25",
+        "collaborator": "Julien V.",
+        "isPotager": false
+    },
+    {
+        "date": "2024-06-25",
+        "collaborator": "Julie R.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-06-26",
+        "collaborator": "Sebastien R.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-06-26",
+        "collaborator": "Julie R.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-06-26",
+        "collaborator": "Claire M.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-06-26",
+        "collaborator": "Quentin L.",
+        "isPotager": false
+    },
+    {
+        "date": "2024-06-26",
+        "collaborator": "Julien V.",
+        "isPotager": false
+    },
+    {
+        "date": "2024-06-26",
+        "collaborator": "Nicolas Z.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-06-26",
+        "collaborator": "Franck B.",
+        "isPotager": false
+    },
+    {
+        "date": "2024-06-27",
+        "collaborator": "Sebastien R.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-06-27",
+        "collaborator": "Quentin L.",
+        "isPotager": false
+    },
+    {
+        "date": "2024-06-28",
+        "collaborator": "Claire M.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-07-01",
+        "collaborator": "Julie R.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-07-01",
+        "collaborator": "Franck B.",
+        "isPotager": false
+    },
+    {
+        "date": "2024-07-01",
+        "collaborator": "Julien V.",
+        "isPotager": false
+    },
+    {
+        "date": "2024-07-01",
+        "collaborator": "Nicolas Z.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-07-01",
+        "collaborator": "Claire M.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-07-01",
+        "collaborator": "Quentin L.",
+        "isPotager": false
+    },
+    {
+        "date": "2024-07-01",
+        "collaborator": "Sebastien R.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-07-02",
+        "collaborator": "Quentin L.",
+        "isPotager": false
+    },
+    {
+        "date": "2024-07-02",
+        "collaborator": "Franck B.",
+        "isPotager": false
+    },
+    {
+        "date": "2024-07-02",
+        "collaborator": "Nicolas Z.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-07-02",
+        "collaborator": "Sebastien R.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-07-02",
+        "collaborator": "Julie R.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-07-02",
+        "collaborator": "Julien V.",
+        "isPotager": false
+    },
+    {
+        "date": "2024-07-03",
+        "collaborator": "Julien V.",
+        "isPotager": false
+    },
+    {
+        "date": "2024-07-03",
+        "collaborator": "Sebastien R.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-07-03",
+        "collaborator": "Julie R.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-07-03",
+        "collaborator": "Nicolas Z.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-07-03",
+        "collaborator": "Claire M.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-07-04",
+        "collaborator": "Julien V.",
+        "isPotager": false
+    },
+    {
+        "date": "2024-07-04",
+        "collaborator": "Nicolas Z.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-07-04",
+        "collaborator": "Claire M.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-07-04",
+        "collaborator": "Franck B.",
+        "isPotager": false
+    },
+    {
+        "date": "2024-07-04",
+        "collaborator": "Sebastien R.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-07-04",
+        "collaborator": "Julie R.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-07-08",
+        "collaborator": "Franck B.",
+        "isPotager": false
+    },
+    {
+        "date": "2024-07-08",
+        "collaborator": "Julie R.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-07-08",
+        "collaborator": "Quentin L.",
+        "isPotager": false
+    },
+    {
+        "date": "2024-07-08",
+        "collaborator": "Nicolas Z.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-07-08",
+        "collaborator": "Claire M.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-07-08",
+        "collaborator": "Julien V.",
+        "isPotager": false
+    },
+    {
+        "date": "2024-07-08",
+        "collaborator": "Sebastien R.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-07-09",
+        "collaborator": "Claire M.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-07-09",
+        "collaborator": "Quentin L.",
+        "isPotager": false
+    },
+    {
+        "date": "2024-07-09",
+        "collaborator": "Julien V.",
+        "isPotager": false
+    },
+    {
+        "date": "2024-07-10",
+        "collaborator": "Julie R.",
+        "isPotager": true
+    },
+    {
+        "date": "2024-07-10",
+        "collaborator": "Julien V.",
+        "isPotager": false
+    },
+    {
+        "date": "2024-07-10",
+        "collaborator": "Franck B.",
+        "isPotager": false
+    }
+]
