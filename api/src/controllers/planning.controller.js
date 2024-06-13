@@ -1,6 +1,11 @@
 const PlanningElement = require("../models/planning.model");
 const weatherController = require("./weather.controller");
 
+const getPlanning = async (req, res) => {
+  let planning = await PlanningElement.find({});
+  res.send(planning);
+};
+
 async function makePlanning() {
   const daysOfWeek = [
     "Dimanche",
@@ -462,5 +467,6 @@ const angeloJSON = [
 ];
 
 module.exports = {
+  getPlanning,
   makePlanning,
 };
