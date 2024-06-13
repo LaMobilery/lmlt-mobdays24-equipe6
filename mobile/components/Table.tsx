@@ -1,4 +1,4 @@
-import { Box, Text } from '@gluestack-ui/themed'
+import { Box, Pressable, ScrollView, Text } from '@gluestack-ui/themed'
 import { StyleSheet } from 'react-native'
 
 export type TableHeader<T> = { label: string; key: keyof T }[]
@@ -6,11 +6,14 @@ export type TableHeader<T> = { label: string; key: keyof T }[]
 export type TableProps<T> = {
   rows: T[]
   header: { label: string; key: keyof T }[]
+  // eslint-disable-next-line autofix/no-unused-vars
+  onClick?: (index: number) => void
 }
 
 export function Table<T extends Record<string, any>>({
   header,
   rows,
+  onClick,
 }: TableProps<T>) {
   return (
     <Box style={styles.root}>
@@ -36,32 +39,41 @@ export function Table<T extends Record<string, any>>({
         })}
       </Box>
 
-      {rows.map((row, rowIndex) => {
-        const hasBorderBottom = rowIndex < rows.length - 1
-        return (
-          <Box key={rowIndex} style={styles.row}>
-            {header.map((item, cellIndex) => {
-              const hasBorderRight = cellIndex < header.length - 1
-              return (
-                <Box
-                  style={[
-                    styles.cell,
-                    hasBorderBottom && styles.borderBottom,
-                    hasBorderRight && styles.borderRight,
-                  ]}
-                >
-                  <Text
-                    key={typeof item.key === 'string' ? item.key : cellIndex}
-                    style={styles.text}
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {rows.map((row, rowIndex) => {
+          const hasBorderBottom = rowIndex < rows.length - 1
+          return (
+            <Pressable
+              key={rowIndex}
+              style={styles.row}
+              onPress={
+                onClick ? () => onClick(rowIndex) : () => console.log('press')
+              }
+            >
+              {header.map((item, cellIndex) => {
+                const hasBorderRight = cellIndex < header.length - 1
+                return (
+                  <Box
+                    style={[
+                      styles.cell,
+                      hasBorderBottom && styles.borderBottom,
+                      hasBorderRight && styles.borderRight,
+                    ]}
+                    key={`${cellIndex} - ${rowIndex}`}
                   >
-                    {row[item.key]}
-                  </Text>
-                </Box>
-              )
-            })}
-          </Box>
-        )
-      })}
+                    <Text
+                      key={typeof item.key === 'string' ? item.key : cellIndex}
+                      style={styles.text}
+                    >
+                      {row[item.key]}
+                    </Text>
+                  </Box>
+                )
+              })}
+            </Pressable>
+          )
+        })}
+      </ScrollView>
     </Box>
   )
 }
