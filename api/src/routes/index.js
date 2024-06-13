@@ -3,6 +3,7 @@ const gardenRoute = require('./garden.router');
 const aiRoute = require('./ai.router');
 const weatherRoute = require('./weather.router');
 const planningRoute = require('./planning.router');
+const actionRoute = require('./action.router');
 
 const router = express.Router();
 
@@ -22,6 +23,10 @@ const defaultRoutes = [
     {
         path: '/planning',
         route: planningRoute
+    },
+    {
+        path: '/action',
+        route: actionRoute
     }
 ]
 

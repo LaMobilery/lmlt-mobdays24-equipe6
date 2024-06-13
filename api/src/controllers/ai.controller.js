@@ -1,5 +1,6 @@
 const { OpenAI } = require("openai");
 const Garden = require('../models/garden.model')
+const actionController = require('./garden.controller')
 const env = require('dotenv').config();
 
 
@@ -43,6 +44,16 @@ async function createVegetable(args) {
       throw new Error('Erreur lors de la mise à jour du jardin:', err);
     }
 
+}
+
+async function createAction(actionType, actionDate, actionUser) {
+    try {
+
+        const action = await actionController.createActionFunction(actionType, actionDate, actionUser);
+
+    } catch (err) {
+        throw new Error("Erreur lors de la saisie de l'action:", err);
+    }
 }
 
 
@@ -103,7 +114,7 @@ const aiBase = async (req,res) => {
                             },
                             harvestDate:{
                                 type: "string",
-                                description: "you have to (Based on maturity and plantation) date give me the estimated harvest date"
+                                description: "you have to (Based on maturity and plantation date) give me the estimated harvest date"
                             },
                             gardenId: {
                                 type: "string",
@@ -111,6 +122,20 @@ const aiBase = async (req,res) => {
                             }
                         }
                     }
+                },
+                {
+                    name: "createAction",
+                    description: "create a new gardening action with specific type. We do not need the garden location, id or name.",
+                    parameters: {
+                        type: "object",
+                        properties: {
+                            type:{
+                                type: "string",
+                                description: "Type of the action resumed in one name in french and not a verb"
+                            }
+                        }
+                    },
+                    required: ['type']
                 }
             ],
             function_call: "auto"
@@ -135,6 +160,12 @@ const aiBase = async (req,res) => {
                 const completionArguments = JSON.parse(completionResponse.function_call.arguments)
                 const vegetable = await createVegetable(completionArguments);
                 res.send(vegetable);
+            }
+
+            if (functionCallName === "createAction") {
+                const completionArguments = JSON.parse(completionResponse.function_call.arguments)
+                const action = await createAction(completionArguments.type, new Date(), "");
+                res.send(action);
             }
         } else {
             res.send(completionResponse.content)

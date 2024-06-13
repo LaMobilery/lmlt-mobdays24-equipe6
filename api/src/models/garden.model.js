@@ -17,5 +17,6 @@ const gardenSchema = new Schema({
   vegetable: [vegetableSchema]
 });
 
+
 module.exports = mongoose.model('Garden', gardenSchema);
 

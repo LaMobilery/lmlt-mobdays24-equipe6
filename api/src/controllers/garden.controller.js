@@ -1,4 +1,5 @@
 const Garden = require('../models/garden.model')
+const Action = require('../models/action.model')
 
 const getGardenById = async (req, res) => {
     let garden = await Garden.findById(req.params.gardenId)
@@ -12,6 +13,26 @@ const createGarden = async (req, res) => {
         created: req.body.created
     })
     res.send(garden)
+}
+
+const getLastActions = async (req,res) => {
+  let action = await Action.find({}).sort({"actionDate": -1}).limit(10);
+  res.send(action);
+}
+
+const createAction = async (req, res) => {
+  let action = await createActionFunction(req.type, req.actionDate, req.user);
+  res.send(action);
+}
+
+async function createActionFunction(actionType, actionDate, actionUser) {
+  
+  let action = await Action.create({
+    type: actionType,
+    actionDate: actionDate,
+    user: actionUser ? actionUser : null
+  })
+  return action;
 }
 
 const addVegetable = async (req, res) => {
@@ -46,5 +67,8 @@ const getPlantationDate = (maturity) => {
 module.exports = {
     getGardenById,
     createGarden,
-    addVegetable
+    addVegetable,
+    getLastActions,
+    createAction,
+    createActionFunction
 }
