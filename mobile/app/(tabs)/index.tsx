@@ -5,11 +5,12 @@ import {
   Input,
   InputField,
 } from '@gluestack-ui/themed'
-import Voice, { SpeechResultsEvent } from '@react-native-voice/voice'
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { Animated, Image, StyleSheet } from 'react-native'
+import { SpeechResultsEvent } from '@react-native-voice/voice'
+import { useCallback, useState } from 'react'
+import { StyleSheet } from 'react-native'
 
 import { MessagesList } from '@/components/MessagesList'
+import { VoiceButton } from '@/components/VoiceButton'
 import {
   useAddMessage,
   useMessages,
@@ -21,14 +22,28 @@ export default function DiscussionScreen() {
   const addMessage = useAddMessage()
   const resetMessages = useResetMessages()
 
-  const animatedValue = useRef(new Animated.Value(1)).current
-
   const [isRecording, setIsRecording] = useState(false)
-  if (0) {
-    console.log('isRecording', isRecording) // DEBUG
-  }
+  console.log('isRecording', isRecording) // DEBUG
+
   const [voiceMessage, setVoiceMessage] = useState('')
   const [textMessage, setTextMessage] = useState('')
+
+  const onStopRecognizing = useCallback(() => {
+    if (voiceMessage === 'Réinitialiser') {
+      resetMessages()
+      return
+    }
+
+    if (!voiceMessage.length) {
+      return
+    }
+
+    addMessage({
+      text: voiceMessage,
+      date: new Date().toISOString(),
+      from: 'user',
+    })
+  }, [voiceMessage, addMessage, resetMessages])
 
   const onSpeechStart = useCallback(() => {
     setIsRecording(true)
@@ -47,57 +62,6 @@ export default function DiscussionScreen() {
     },
     [setVoiceMessage],
   )
-
-  useEffect(() => {
-    Voice.onSpeechStart = onSpeechStart
-    Voice.onSpeechEnd = onSpeechEnd
-    Voice.onSpeechResults = onSpeechResults
-
-    return () => {
-      Voice.destroy().then(Voice.removeAllListeners)
-    }
-  }, [onSpeechEnd, onSpeechResults, onSpeechStart])
-
-  const startRecognizing = useCallback(async () => {
-    try {
-      await Voice.start('fr-FR')
-      Animated.spring(animatedValue, {
-        toValue: 1.2,
-        useNativeDriver: true,
-      }).start()
-    } catch (e) {
-      console.error(e)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const stopRecognizing = useCallback(async () => {
-    try {
-      await Voice.stop()
-      Animated.spring(animatedValue, {
-        toValue: 1,
-        useNativeDriver: true,
-      }).start()
-
-      if (voiceMessage === 'Réinitialiser') {
-        resetMessages()
-        return
-      }
-
-      if (!voiceMessage.length) {
-        return
-      }
-
-      addMessage({
-        text: voiceMessage,
-        date: new Date().toISOString(),
-        from: 'user',
-      })
-    } catch (e) {
-      console.error(e)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [addMessage, voiceMessage])
 
   const sendTextMessage = useCallback(() => {
     if (textMessage === 'Reset') {
@@ -153,16 +117,12 @@ export default function DiscussionScreen() {
             <ButtonText>Envoyer</ButtonText>
           </Button>
         ) : (
-          <Animated.View style={{ transform: [{ scale: animatedValue }] }}>
-            <Button
-              onPressIn={startRecognizing}
-              onPressOut={stopRecognizing}
-              style={styles.speechBtn}
-            >
-              <Image source={require('@/assets/logos/speech.png')} />
-              <ButtonText>Parler</ButtonText>
-            </Button>
-          </Animated.View>
+          <VoiceButton
+            onStopRecognizing={onStopRecognizing}
+            onSpeechStart={onSpeechStart}
+            onSpeechEnd={onSpeechEnd}
+            onSpeechResults={onSpeechResults}
+          />
         )}
       </Box>
     </Box>
@@ -183,11 +143,6 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     gap: 10,
-  },
-  speechBtn: {
-    gap: 10,
-    backgroundColor: '#FF8B33',
-    borderRadius: 50,
   },
   input: {
     flex: 1,
