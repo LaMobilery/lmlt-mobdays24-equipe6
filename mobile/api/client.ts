@@ -9,3 +9,6 @@ const headers = {
 export const axiosInstance = axios.create({
   headers: headers,
 })
+
+export const backendBaseUrl =
+  'https://rngmw-91-212-236-226.a.free.pinggy.link/v1'

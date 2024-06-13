@@ -4,11 +4,14 @@ import {
   ButtonText,
   Input,
   InputField,
+  Spinner,
 } from '@gluestack-ui/themed'
-import { SpeechResultsEvent } from '@react-native-voice/voice'
-import { useCallback, useState } from 'react'
+import Voice, { SpeechResultsEvent } from '@react-native-voice/voice'
+import * as Speech from 'expo-speech'
+import { useCallback, useEffect, useState } from 'react'
 import { StyleSheet } from 'react-native'
 
+import { axiosInstance, backendBaseUrl } from '@/api/client'
 import { MessagesList } from '@/components/MessagesList'
 import { VoiceButton } from '@/components/VoiceButton'
 import {
@@ -17,18 +20,71 @@ import {
   useResetMessages,
 } from '@/stores/messages.store'
 
+const speak = async (message: string) => {
+  const voices = await Speech.getAvailableVoicesAsync()
+  const frVoices = voices.filter((voice) => voice.language === 'fr-FR')
+  frVoices.forEach((voice, index) => {
+    console.log(index, voice)
+  })
+  const voice = frVoices.find((voice) => voice.name === 'Grandma')
+  Speech.speak(message, {
+    voice: voice?.identifier,
+    pitch: 3,
+    rate: 0.8,
+  })
+}
+
 export default function DiscussionScreen() {
   const messages = useMessages()
   const addMessage = useAddMessage()
   const resetMessages = useResetMessages()
 
-  const [isRecording, setIsRecording] = useState(false)
-  console.log('isRecording', isRecording) // DEBUG
+  // 192.168.2.136 ip address
 
+  const potagerIdRef = 'Mon jardin a pour identifiant 6669b5d92a7b8a4b1ecbab8a'
+
+  const sendMessageToAPI = useCallback(
+    async (message: string) => {
+      setIsLoadingAi(true)
+
+      try {
+        const response = await axiosInstance.post<{ msg: string }>(
+          `${backendBaseUrl}/ai/`,
+          {
+            msg: `${potagerIdRef} ${message}`,
+          },
+        )
+
+        const responseMessage = response.data.msg
+
+        if (responseMessage) {
+          addMessage({
+            text: responseMessage,
+            date: new Date().toISOString(),
+            from: 'server',
+          })
+          speak(responseMessage)
+        }
+
+        console.log('Success:', response)
+      } catch (error) {
+        console.error('Error:', error)
+      }
+
+      setIsLoadingAi(false)
+    },
+    [addMessage],
+  )
+
+  const [isRecording, setIsRecording] = useState(false)
+  if (0) {
+    console.log('isRecording', isRecording) // DEBUG
+  }
+  const [isLoadingAi, setIsLoadingAi] = useState(false)
   const [voiceMessage, setVoiceMessage] = useState('')
   const [textMessage, setTextMessage] = useState('')
 
-  const onStopRecognizing = useCallback(() => {
+  const onStopRecognizing = useCallback(async () => {
     if (voiceMessage === 'Réinitialiser') {
       resetMessages()
       return
@@ -43,7 +99,9 @@ export default function DiscussionScreen() {
       date: new Date().toISOString(),
       from: 'user',
     })
-  }, [voiceMessage, addMessage, resetMessages])
+
+    await sendMessageToAPI(voiceMessage)
+  }, [voiceMessage, addMessage, resetMessages, sendMessageToAPI])
 
   const onSpeechStart = useCallback(() => {
     setIsRecording(true)
@@ -63,18 +121,39 @@ export default function DiscussionScreen() {
     [setVoiceMessage],
   )
 
-  const sendTextMessage = useCallback(() => {
+  useEffect(() => {
+    Voice.onSpeechStart = onSpeechStart
+    Voice.onSpeechEnd = onSpeechEnd
+    Voice.onSpeechResults = onSpeechResults
+
+    return () => {
+      Voice.destroy().then(Voice.removeAllListeners)
+    }
+  }, [onSpeechEnd, onSpeechResults, onSpeechStart])
+
+  const sendTextMessage = useCallback(async () => {
     if (textMessage === 'Reset') {
       resetMessages()
-    } else {
-      addMessage({
-        text: textMessage,
-        date: new Date().toISOString(),
-        from: 'user',
-      })
+      setTextMessage('')
+      return
     }
 
+    const text = textMessage
     setTextMessage('')
+
+    addMessage({
+      text,
+      date: new Date().toISOString(),
+      from: 'user',
+    })
+
+    try {
+      await sendMessageToAPI(text)
+    } catch (e) {
+      console.log('error sendMessageToAPI', e)
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setTextMessage, resetMessages, addMessage, textMessage])
 
   const isOnStore = messages[messages.length - 1]?.text === voiceMessage
@@ -93,6 +172,13 @@ export default function DiscussionScreen() {
                 },
               ]
             : messages
+        }
+        footer={
+          isLoadingAi ? (
+            <Box style={styles.spinnerContainer}>
+              <Spinner size="large" />
+            </Box>
+          ) : undefined
         }
       />
 
@@ -146,5 +232,8 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
+  },
+  spinnerContainer: {
+    padding: 12,
   },
 })
