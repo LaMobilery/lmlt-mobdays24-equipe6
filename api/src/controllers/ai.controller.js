@@ -144,7 +144,7 @@ const aiBase = async (req,res) => {
                 
             }
         } else {
-            res.send(completionResponse.content)
+            res.send({'msg':completionResponse.content})
         }
     }   catch (error) {
         if (error.response) {
