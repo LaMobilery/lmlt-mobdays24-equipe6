@@ -7,9 +7,10 @@ import { UIMessage } from './UIMessage'
 
 export type MessagesListProps = {
   messages: Message[]
+  footer?: React.ReactElement
 }
 
-export const MessagesList = ({ messages }: MessagesListProps) => {
+export const MessagesList = ({ messages, footer }: MessagesListProps) => {
   const reversedMessages = [...messages].reverse()
 
   return (
@@ -33,6 +34,7 @@ export const MessagesList = ({ messages }: MessagesListProps) => {
           </Box>
         )
       }}
+      ListHeaderComponent={footer}
     />
   )
 }

@@ -2,7 +2,7 @@ import { Box, Text } from '@gluestack-ui/themed'
 import { useEffect, useState } from 'react'
 import { StyleSheet } from 'react-native'
 
-import { axiosInstance } from '@/api/client'
+import { axiosInstance, backendBaseUrl } from '@/api/client'
 import { Table, TableHeader } from '@/components/Table'
 
 type ApiAction = {
@@ -49,9 +49,7 @@ export default function PlanningScreen() {
   useEffect(() => {
     const fetchActions = async () => {
       try {
-        const response = await axiosInstance.get(
-          'http://localhost:3000/v1/planning',
-        )
+        const response = await axiosInstance.get(`${backendBaseUrl}/planning`)
         setPlanning(response.data.map(fromApiActionToPlanningItem))
         console.log(JSON.stringify(response.data, null, 2))
       } catch {}
