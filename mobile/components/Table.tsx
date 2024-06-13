@@ -28,7 +28,6 @@ export function Table<T extends Record<string, any>>({
                 styles.borderBottomStrong,
                 hasBorderRight && styles.borderRight,
               ]}
-              key={index}
             >
               <Text style={styles.text}>{item.label}</Text>
             </Box>

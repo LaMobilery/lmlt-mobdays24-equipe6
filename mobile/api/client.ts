@@ -1,14 +1,34 @@
 import axios from 'axios'
 
-const headers = {
+import { config } from '@/config'
+
+/**
+ * OPEN AI
+ */
+const openAiHeaders = {
   'Content-Type': 'application/json',
-  Authorization:
-    'Bearer sk-proj-U8OsqvJcY0a8s21EJ1HVT3BlbkFJDzP7Q0OhhGnj50GDwu0X',
+  Authorization: `Bearer ${config.openAiApiKey}`,
 }
 
-export const axiosInstance = axios.create({
-  headers: headers,
+const openAiHost = 'https://api.openai.com'
+const openAiBaseUrl = `${openAiHost}/v1`
+
+export const openAiClient = axios.create({
+  headers: openAiHeaders,
+  baseURL: openAiBaseUrl,
 })
 
-export const backendBaseUrl =
-  'https://rngmw-91-212-236-226.a.free.pinggy.link/v1'
+/**
+ * BACKEND
+ */
+const backendHost = 'http://rnexb-91-212-236-226.a.free.pinggy.link'
+export const backendBaseUrl = `${backendHost}/v1`
+
+const backendHeaders = {
+  'Content-Type': 'application/json',
+}
+
+export const backendClient = axios.create({
+  headers: backendHeaders,
+  baseURL: backendBaseUrl,
+})

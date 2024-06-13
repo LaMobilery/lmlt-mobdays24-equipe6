@@ -11,7 +11,7 @@ import * as Speech from 'expo-speech'
 import { useCallback, useEffect, useState } from 'react'
 import { StyleSheet } from 'react-native'
 
-import { axiosInstance, backendBaseUrl } from '@/api/client'
+import { backendClient } from '@/api/client'
 import { MessagesList } from '@/components/MessagesList'
 import { VoiceButton } from '@/components/VoiceButton'
 import {
@@ -48,12 +48,9 @@ export default function DiscussionScreen() {
       setIsLoadingAi(true)
 
       try {
-        const response = await axiosInstance.post<{ msg: string }>(
-          `${backendBaseUrl}/ai/`,
-          {
-            msg: `${potagerIdRef} ${message}`,
-          },
-        )
+        const response = await backendClient.post<{ msg: string }>('/ai', {
+          msg: `${potagerIdRef} ${message}`,
+        })
 
         const responseMessage = response.data.msg
 
