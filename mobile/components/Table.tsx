@@ -34,7 +34,7 @@ export function Table<T extends Record<string, any>>({
           )
         })}
       </Box>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false} overScrollMode="never">
         {rows.map((row, rowIndex) => {
           const hasBorderBottom = rowIndex < rows.length - 1
           return (

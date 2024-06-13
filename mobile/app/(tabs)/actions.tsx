@@ -17,7 +17,11 @@ const fromApiActionToActionItem = (apiAction: ApiAction): Action => {
   return {
     id: apiAction._id,
     action: apiAction.type,
-    date: apiAction.actionDate,
+    date: new Date(apiAction.actionDate).toLocaleDateString('fr-FR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: 'numeric',
+    }),
   }
 }
 

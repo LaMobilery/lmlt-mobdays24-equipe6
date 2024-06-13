@@ -24,7 +24,6 @@ const sendImageToAI = async (base64: string) => {
           {
             type: 'image_url',
             image_url: {
-              // url: `data:image/jpeg;base64,${base64}`,
               url: base64,
             },
           },
@@ -56,7 +55,9 @@ export default function SetupScreen() {
     }
 
     fetchVegetables()
-    setInterval(fetchVegetables, 1000 * 10)
+    const interval = setInterval(fetchVegetables, 1000 * 10)
+
+    return () => clearInterval(interval)
   }, [])
 
   const pickImageCameraRoll = async () => {
