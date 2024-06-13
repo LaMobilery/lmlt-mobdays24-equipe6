@@ -36,7 +36,7 @@ async function createVegetable(args) {
         { new: true, useFindAndModify: false }
       )
       if (garden) {
-        return garden;
+        return {'data' : garden, 'msg' : args.responseText};
       } else {
         return {message: "jardin non trouvé"}
       }
@@ -119,6 +119,10 @@ const aiBase = async (req,res) => {
                             gardenId: {
                                 type: "string",
                                 description: "ID of the garden"
+                            },
+                            responseText: {
+                                type: "string",
+                                description: "Based on user demand, create a simple text response in this field to tell the user something like : J'ai créer pour vous (nombre de legume) (nom du legume), voulez-vous ajouter un autre legume ?"
                             }
                         }
                     }
@@ -158,8 +162,11 @@ const aiBase = async (req,res) => {
 
             if(functionCallName === "createVegetable") {
                 const completionArguments = JSON.parse(completionResponse.function_call.arguments)
-                const vegetable = await createVegetable(completionArguments);
-                res.send(vegetable);
+                const response = await createVegetable(completionArguments);
+                if(response){
+                    res.send(response);
+                }
+                
             }
 
             if (functionCallName === "createAction") {
@@ -168,7 +175,7 @@ const aiBase = async (req,res) => {
                 res.send(action);
             }
         } else {
-            res.send(completionResponse.content)
+            res.send({'msg':completionResponse.content})
         }
     }   catch (error) {
         if (error.response) {
