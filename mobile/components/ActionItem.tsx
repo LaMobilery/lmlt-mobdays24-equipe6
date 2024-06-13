@@ -15,27 +15,37 @@ type ActionItemProps = {
 export const ActionItem: React.FC<ActionItemProps> = ({
   action,
   isTheLast,
-}) => (
-  <Box style={styles.item}>
-    <Box>
-      <Box style={styles.circle} />
-      {!isTheLast ? <Box style={styles.vertical} /> : null}
+}) => {
+  const date = new Date(action.date).toLocaleDateString('fr-FR', {
+    year: 'numeric',
+    month: '2-digit',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  })
+  return (
+    <Box style={styles.item}>
+      <Box>
+        <Box style={styles.circle} />
+        {!isTheLast ? <Box style={styles.vertical} /> : null}
+      </Box>
+      <Box>
+        <Text
+          style={[
+            action.action.includes('Oubli') ? styles.missed : styles.done,
+            styles.action,
+          ]}
+        >
+          {action.action}
+        </Text>
+        <Text style={styles.date}>
+          {action.action.includes('Oubli') ? '---' : `le ${date}`}
+        </Text>
+      </Box>
     </Box>
-    <Box>
-      <Text
-        style={[
-          action.action.includes('Oubli') ? styles.missed : styles.done,
-          styles.action,
-        ]}
-      >
-        {action.action}
-      </Text>
-      <Text style={styles.date}>
-        {action.action.includes('Oubli') ? '---' : `le ${action.date}`}
-      </Text>
-    </Box>
-  </Box>
-)
+  )
+}
 
 const styles = StyleSheet.create({
   item: {

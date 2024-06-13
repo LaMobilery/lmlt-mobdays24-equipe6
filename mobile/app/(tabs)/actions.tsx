@@ -17,11 +17,7 @@ const fromApiActionToActionItem = (apiAction: ApiAction): Action => {
   return {
     id: apiAction._id,
     action: apiAction.type,
-    date: new Date(apiAction.actionDate).toLocaleDateString('fr-FR', {
-      year: 'numeric',
-      month: '2-digit',
-      day: 'numeric',
-    }),
+    date: apiAction.actionDate,
   }
 }
 
@@ -48,16 +44,12 @@ export default function ActionsScreen() {
     <Box style={styles.container}>
       <FlatList
         showsVerticalScrollIndicator={false}
-        data={actions}
+        data={[...actions].sort((a, b) => a.date.localeCompare(b.date) * -1)}
         renderItem={({ item, index }) => {
-          return (
-            <ActionItem
-              action={item}
-              isTheLast={index === actions.length - 1}
-            />
-          )
+          return <ActionItem action={item} isTheLast={index === 0} />
         }}
         keyExtractor={(item) => item.id}
+        inverted
       />
     </Box>
   )

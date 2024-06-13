@@ -48,11 +48,14 @@ export default function DiscussionScreen() {
       setIsLoadingAi(true)
 
       try {
-        const response = await backendClient.post<{ msg: string }>('/ai', {
+        const response = await backendClient.post<{
+          msg?: string
+          responseText?: string
+        }>('/ai', {
           msg: `${potagerIdRef} ${message}`,
         })
 
-        const responseMessage = response.data.msg
+        const responseMessage = response.data.msg || response.data.responseText
 
         if (responseMessage) {
           addMessage({
