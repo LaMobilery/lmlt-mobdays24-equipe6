@@ -28,14 +28,13 @@ export function Table<T extends Record<string, any>>({
                 styles.borderBottomStrong,
                 hasBorderRight && styles.borderRight,
               ]}
-              key={index}
             >
               <Text style={styles.text}>{item.label}</Text>
             </Box>
           )
         })}
       </Box>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false} overScrollMode="never">
         {rows.map((row, rowIndex) => {
           const hasBorderBottom = rowIndex < rows.length - 1
           return (

@@ -3,7 +3,7 @@ import * as ImagePicker from 'expo-image-picker'
 import { useEffect, useState } from 'react'
 import { Alert, Image, StyleSheet, View } from 'react-native'
 
-import { axiosInstance } from '@/api/client'
+import { backendClient, openAiClient } from '@/api/client'
 import { Vegetable } from '@/api/types'
 import { SetupTable } from '@/components/SetupTable'
 
@@ -24,7 +24,6 @@ const sendImageToAI = async (base64: string) => {
           {
             type: 'image_url',
             image_url: {
-              // url: `data:image/jpeg;base64,${base64}`,
               url: base64,
             },
           },
@@ -33,17 +32,12 @@ const sendImageToAI = async (base64: string) => {
     ],
     max_tokens: 300,
   }
-  const res = await axiosInstance.post(
-    'https://api.openai.com/v1/chat/completions',
-    payload,
-  )
+  const res = await openAiClient.post('/chat/completions', payload)
   return res.data.choices[0].message.content
 }
 
 const getVegetables = async () => {
-  const res = await axiosInstance.get(
-    'http://localhost:3000/v1/garden/6669b5d92a7b8a4b1ecbab8a',
-  )
+  const res = await backendClient.get('/garden/6669b5d92a7b8a4b1ecbab8a')
   console.log(res.data['vegetable'])
 
   return res
@@ -52,15 +46,18 @@ const getVegetables = async () => {
 export default function SetupScreen() {
   const [list, setList] = useState<Vegetable[]>([])
 
-  const getVegetables = async () => {
-    const res = await axiosInstance.get(
-      'http://localhost:3000/v1/garden/6669b5d92a7b8a4b1ecbab8a',
-    )
-    setList(res.data['vegetable'])
-  }
-
   useEffect(() => {
-    getVegetables()
+    const fetchVegetables = async () => {
+      const vegetables = await backendClient.get(
+        '/garden/6669b5d92a7b8a4b1ecbab8a',
+      )
+      setList(vegetables.data['vegetable'])
+    }
+
+    fetchVegetables()
+    const interval = setInterval(fetchVegetables, 1000 * 10)
+
+    return () => clearInterval(interval)
   }, [])
 
   const pickImageCameraRoll = async () => {
@@ -73,13 +70,10 @@ export default function SetupScreen() {
       try {
         const res = await sendImageToAI(base64Image)
         const jsonObject = JSON.parse(res)
-        await axiosInstance.post(
-          'http://localhost:3000/v1/garden/6669b5d92a7b8a4b1ecbab8a',
-          {
-            maturity: jsonObject['maturity'],
-            name: jsonObject['name'],
-          },
-        )
+        await backendClient.post('/garden/6669b5d92a7b8a4b1ecbab8a', {
+          maturity: jsonObject['maturity'],
+          name: jsonObject['name'],
+        })
         getVegetables()
       } catch (e) {
         console.log(e)
@@ -138,10 +132,6 @@ export default function SetupScreen() {
     >
       <SetupTable array={list} />
       <View style={styles.footer}>
-        <Button style={styles.btn} onPress={() => console.log('vocal')}>
-          <Image source={require('@/assets/logos/speech.png')} />
-          <ButtonText>Ajouter un légume</ButtonText>
-        </Button>
         <Button style={styles.btn} onPress={showAlert}>
           <Image
             style={{ width: 25, height: 25 }}
