@@ -19,18 +19,14 @@ export function Table<T extends Record<string, any>>({
           const hasBorderRight = index < header.length - 1
           return (
             <Box
+              key={typeof item.key === 'string' ? item.key : index}
               style={[
                 styles.cell,
                 styles.borderBottomStrong,
                 hasBorderRight && styles.borderRight,
               ]}
             >
-              <Text
-                key={typeof item.key === 'string' ? item.key : index}
-                style={styles.text}
-              >
-                {item.label}
-              </Text>
+              <Text style={styles.text}>{item.label}</Text>
             </Box>
           )
         })}
@@ -44,18 +40,14 @@ export function Table<T extends Record<string, any>>({
               const hasBorderRight = cellIndex < header.length - 1
               return (
                 <Box
+                  key={typeof item.key === 'string' ? item.key : cellIndex}
                   style={[
                     styles.cell,
                     hasBorderBottom && styles.borderBottom,
                     hasBorderRight && styles.borderRight,
                   ]}
                 >
-                  <Text
-                    key={typeof item.key === 'string' ? item.key : cellIndex}
-                    style={styles.text}
-                  >
-                    {row[item.key]}
-                  </Text>
+                  <Text style={styles.text}>{row[item.key]}</Text>
                 </Box>
               )
             })}
