@@ -21,7 +21,7 @@ export const openAiClient = axios.create({
 /**
  * BACKEND
  */
-const backendHost = 'http://rnexb-91-212-236-226.a.free.pinggy.link'
+const backendHost = config.backendHost
 export const backendBaseUrl = `${backendHost}/v1`
 
 const backendHeaders = {

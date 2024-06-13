@@ -131,10 +131,6 @@ export default function SetupScreen() {
     >
       <SetupTable array={list} />
       <View style={styles.footer}>
-        <Button style={styles.btn} onPress={() => console.log('vocal')}>
-          <Image source={require('@/assets/logos/speech.png')} />
-          <ButtonText>Ajouter un légume</ButtonText>
-        </Button>
         <Button style={styles.btn} onPress={showAlert}>
           <Image
             style={{ width: 25, height: 25 }}

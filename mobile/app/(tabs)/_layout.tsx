@@ -83,7 +83,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="setup"
         options={{
-          title: 'Setup',
+          title: 'Gestion',
           headerTitle: getCurrentDate(),
           headerTitleStyle: {
             textTransform: 'uppercase',
