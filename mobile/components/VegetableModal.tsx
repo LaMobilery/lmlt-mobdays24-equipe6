@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   recipe: {
-    backgroundColor: 'pink',
+    backgroundColor: '#FF8B3333',
     padding: 10,
     marginBottom: 10,
     borderRadius: 10,

@@ -27,6 +27,7 @@ export function Table<T extends Record<string, any>>({
                 styles.borderBottomStrong,
                 hasBorderRight && styles.borderRight,
               ]}
+              key={index}
             >
               <Text
                 key={typeof item.key === 'string' ? item.key : index}
@@ -59,7 +60,7 @@ export function Table<T extends Record<string, any>>({
                       hasBorderBottom && styles.borderBottom,
                       hasBorderRight && styles.borderRight,
                     ]}
-                    key={`${cellIndex} - ${rowIndex}`}
+                    key={cellIndex}
                   >
                     <Text
                       key={typeof item.key === 'string' ? item.key : cellIndex}

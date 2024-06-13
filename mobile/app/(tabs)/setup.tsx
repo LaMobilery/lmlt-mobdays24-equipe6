@@ -163,5 +163,7 @@ const styles = StyleSheet.create({
   },
   btn: {
     gap: 10,
+    backgroundColor: '#FF8B33',
+    borderRadius: 50,
   },
 })
